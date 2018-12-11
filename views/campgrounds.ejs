@@ -1,0 +1,14 @@
+<% include partials/header %>
+<header class="clearfix">
+	<h1>All Campgrounds</h1>
+	<a href="/campgrounds/new">Add new campground</a>
+</header>
+<div class="container cbp-rfgrid">
+	<ul>
+	<% campgrounds.forEach(function(campground){ %>
+		<li><a href="#"><img src="<%= campground.image %>"><div><h3><%= campground.name %></h3></div></a></li>
+	<% });%>
+	</ul>
+</div>
+
+<% include partials/footer %>
