@@ -1,47 +1,48 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
+var express 	= require("express"),
+	app 		= express(),
+	bodyParser 	= require("body-parser"),
+	mongoose 	= require("mongoose"),
+	passport	= require("passport"),
+	LocalStrategy = require("passport-local"),
+	Campground 	= require("./models/campground"),
+	Comment 	= require("./models/comment"),
+	User 		= require("./models/user"),
+	seedDB 		= require("./seeds"); // Campground mongoose Model.
+
+// Requiring Routes
+var commentRoutes 	 = require("./routes/comments"),
+	campgroundRoutes = require("./routes/campgrounds"),
+	indexRoutes		 = require("./routes/index");
+
+mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"));
 app.set("view engine", "ejs");
+app.use(express.static( __dirname + "/public"));
 
-var campgrounds = [
-	{name: "Salmon Creek", image:"https://picsum.photos/500/300/?random"},
-	{name: "Demon's Horn", image:"https://picsum.photos/500/300/?random"},
-	{name: "Horse Shoe", image:"https://picsum.photos/500/300/?random"},
-	{name: "Wildow's Fall", image:"https://picsum.photos/500/300/?random"},
-	{name: "Granite Hill", image:"https://picsum.photos/500/300/?random"},
-	{name: "Mountain Goat's Rest", image:"https://picsum.photos/500/300/?random"},
-];
+seedDB();
 
-// Landing Home Page Route
-app.get("/", function(req, res){
-	res.render("home");
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+	secret: "Once Again Rusty Wins Cutest Dog!",
+	resave: false,
+	saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// middleware para todas as rotas do app.
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
 });
 
-// Camping grounds Routes
-app.get("/campgrounds", function(req, res){
-	res.render("campgrounds", {campgrounds: campgrounds});
-});
-
-// Add new campground route
-app.post("/campgrounds", function(req, res){
-	var name = req.body.name;
-	var image = req.body.image;
-	campgrounds.push({name: name, image: image});
-	res.redirect("campgrounds");
-});
-
-// New Campground form route
-app.get("/campgrounds/new", function(req, res){
-	res.render("new");
-});
-
-// 404 - bad request page
-app.get("*", function(req, res){
-	res.render("404");
-});
+app.use("/campgrounds/:id/comments", commentRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/", indexRoutes);
 
 app.listen(3000, function(req, res){
 	console.log("YelpCamp App Has Started");
