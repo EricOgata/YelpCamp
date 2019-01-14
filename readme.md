@@ -92,6 +92,21 @@ Each campground has:
 * Associate users and Comments
 * Save author's name to a comment automatically
 
+##Users + Campgrounds
+* Prevent an unathenticated user from creating a campground
+* Save username + id to newly created campground
+
+##Deleting Campgrounds
+* Add Destroy Route
+* Add Delete button
+
+##Editing Campgrounds
+* Add Method-Override
+* Add Edit Route for Campgrounds
+* Add Link to Edit Page
+* Add Update Route
+* Fix $set Problem
+
 RESTFUL ROUTES
 
 name 	url			verb	description.

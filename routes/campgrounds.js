@@ -16,13 +16,19 @@ router.get("/", function(req, res){
 });
 
 // Add new campground route (CREATE ROUTE)
-router.post("/", function(req, res){
-	Campground.create(
-	{
+router.post("/", isLoggedIn, function(req, res){
+
+	var newCampground = {
 		name: req.body.name, 
 		image: req.body.image,
 		description: req.body.description,
-	}, function(err, campground){
+		author:{
+			id: req.user._id,
+			username: req.user.username
+		}
+	};
+
+	Campground.create( newCampground, function(err, campground){
 		if(err)
 			console.log("A error has occurred:\n" + err);
 		else{
@@ -32,7 +38,7 @@ router.post("/", function(req, res){
 	});
 });
 //Show form to create a new campground (NEW ROUTE)
-router.get("/new", function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
 	res.render("campgrounds/new");
 });
 //Display info of a single campground (SHOW ROUTE)
@@ -46,5 +52,12 @@ router.get("/:id", function(req, res){
 			res.render("campgrounds/show", {campground: foundCampground});
 	});
 });
+
+// My Middleware
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated())
+		return next();
+	res.redirect("/login");
+};
 
 module.exports = router; // exporta do módulo.

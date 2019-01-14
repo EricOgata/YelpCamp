@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static( __dirname + "/public"));
 
-seedDB();
+// seedDB(); // Seed the database
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -40,6 +40,8 @@ app.use(function(req, res, next){
 	next();
 });
 
+// Define express routes via import 
+// app.use([common url links], routes module)
 app.use("/campgrounds/:id/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/", indexRoutes);

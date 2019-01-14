@@ -6,9 +6,6 @@
 		<div style="width:30%; margin: 25px auto; ">
 			<form action="/campgrounds/<%= campground._id %>/comments" method="POST">
 				<div class="form-group">
-					<input type="text" class="form-control" id="authorInput" placeholder="Author" name="comment[author]" value="<%= currentUser.username %>" readonly>
-				</div>
-				<div class="form-group">
 					<input type="text" class="form-control" id="commentInput" placeholder="Comment Text" name="comment[text]">
 				</div>
 				<div class="form-group">

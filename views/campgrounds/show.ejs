@@ -22,6 +22,7 @@
 						</div>
 					</div>
 					<p><%= campground.description %></p>
+					<p class="card-subtitle text-muted"><em>Submitted by <%= campground.author.username %></em></p>
 				</div>
 			</div>
 
@@ -33,7 +34,7 @@
 				<% campground.comments.forEach(function(comment){ %>
 					<div class="row mt-1">
 						<div class="col-md-12">
-							<strong><%= comment.author %></strong>
+							<strong><%= comment.author.username %></strong>
 							<span class="float-right">10 days ago</span>
 							<p><%= comment.text %></p>
 						</div>
