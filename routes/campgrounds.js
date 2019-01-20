@@ -21,6 +21,7 @@ router.post("/", isLoggedIn, function(req, res){
 	var newCampground = {
 		name: req.body.name, 
 		image: req.body.image,
+		price: req.body.price,
 		description: req.body.description,
 		author:{
 			id: req.user._id,
@@ -41,15 +42,52 @@ router.post("/", isLoggedIn, function(req, res){
 router.get("/new", isLoggedIn, function(req, res){
 	res.render("campgrounds/new");
 });
+
 //Display info of a single campground (SHOW ROUTE)
 router.get("/:id", function(req, res){
 	// find the campground with the provided ID
 	// render show template with that campground
 	Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
 		if(err)
-			res.redirect("404");
-		else
+			res.redirect("/404");
+		else{
 			res.render("campgrounds/show", {campground: foundCampground});
+		}
+	});
+});
+
+// EDIT CAMPGROUND ROUTE.
+router.get("/:id/edit", function(req, res){
+	// find the campground with the provided ID
+	// render show template with that campground
+	Campground.findById(req.params.id).exec(function(err, foundCampground){
+		if(err)
+			res.redirect('/404');
+		else
+			res.render("campgrounds/edit", {campground: foundCampground});
+	});
+});
+
+// UPDATE CAMPGROUND ROUTE
+router.put("/:id",function(req, res){
+	// Find and UPDATE the correct Campground
+	Campground.findByIdAndUpdate(req.params.id, req.body.campground,function(err, editedCampground){
+		if(err){
+			res.redirect('/404');
+		}else{
+			res.redirect("/campgrounds/"+req.params.id);
+		}
+	});
+});
+
+// DESTROY/DELETE Campgrounds ROUTE
+router.delete("/:id", function(req, res){
+	Campground.findByIdAndDelete(req.params.id, function(err, deletedCampground){
+		if(err){
+			res.redirect("/404");
+		}else{
+			res.redirect("/campgrounds");
+		}
 	});
 });
 
