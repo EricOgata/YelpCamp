@@ -16,7 +16,7 @@ router.get("/", function(req, res){
 });
 
 // Add new campground route (CREATE ROUTE)
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", isLoggedIn, convertVirgula, function(req, res){
 
 	var newCampground = {
 		name: req.body.name, 
@@ -69,10 +69,11 @@ router.get("/:id/edit", isLoggedIn, function(req, res){
 });
 
 // UPDATE CAMPGROUND ROUTE
-router.put("/:id", isLoggedIn, function(req, res){
+router.put("/:id", isLoggedIn, convertVirgula, function(req, res){
 	// Find and UPDATE the correct Campground
 	Campground.findByIdAndUpdate(req.params.id, req.body.campground,function(err, editedCampground){
 		if(err){
+			console.log(err);
 			res.redirect('/404');
 		}else{
 			res.redirect("/campgrounds/"+req.params.id);
@@ -97,5 +98,11 @@ function isLoggedIn(req, res, next){
 		return next();
 	res.redirect("/login");
 };
+
+// Converter vírgulas para dot
+function convertVirgula(req, res, next){
+	req.body.campground.price = req.body.campground.price.replace(",",".");
+	return next();
+}
 
 module.exports = router; // exporta do módulo.
