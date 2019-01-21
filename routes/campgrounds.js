@@ -57,7 +57,7 @@ router.get("/:id", function(req, res){
 });
 
 // EDIT CAMPGROUND ROUTE.
-router.get("/:id/edit", function(req, res){
+router.get("/:id/edit", isLoggedIn, function(req, res){
 	// find the campground with the provided ID
 	// render show template with that campground
 	Campground.findById(req.params.id).exec(function(err, foundCampground){
@@ -69,7 +69,7 @@ router.get("/:id/edit", function(req, res){
 });
 
 // UPDATE CAMPGROUND ROUTE
-router.put("/:id",function(req, res){
+router.put("/:id", isLoggedIn, function(req, res){
 	// Find and UPDATE the correct Campground
 	Campground.findByIdAndUpdate(req.params.id, req.body.campground,function(err, editedCampground){
 		if(err){
@@ -81,7 +81,7 @@ router.put("/:id",function(req, res){
 });
 
 // DESTROY/DELETE Campgrounds ROUTE
-router.delete("/:id", function(req, res){
+router.delete("/:id", isLoggedIn, function(req, res){
 	Campground.findByIdAndDelete(req.params.id, function(err, deletedCampground){
 		if(err){
 			res.redirect("/404");
