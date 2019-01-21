@@ -1,4 +1,4 @@
-# Project Title
+# YelpCamp
 
 YelpCamp Project Developed in Udemy WebDeveloper Course
 
